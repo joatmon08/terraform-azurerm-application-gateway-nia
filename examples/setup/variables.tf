@@ -15,3 +15,15 @@ variable "tags" {
     Purpose = "E2E testing for terraform-azurerm-application-gateway-nia"
   }
 }
+
+variable "consul_version" {
+  type        = string
+  description = "Consul version to install for example. Default is 1.11.5."
+  default     = "1.11.5"
+}
+
+variable "envoy_version" {
+  type        = string
+  description = "Envoy version to install for example. Default is 1.20.2."
+  default     = "1.20.2"
+}

@@ -56,4 +56,5 @@ resource "azurerm_network_security_group" "test" {
 resource "azurerm_subnet_network_security_group_association" "test" {
   subnet_id                 = azurerm_subnet.test.id
   network_security_group_id = azurerm_network_security_group.test.id
+  depends_on                = [azurerm_subnet.test]
 }

@@ -6,9 +6,9 @@ application
 gateway](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_gateway).
 It's been tested with:
 
-- Consul-Terraform-Sync v0.4.2
-- Terraform v1.0.0
-- Consul v1.10.6
+- Consul-Terraform-Sync (CTS) v0.5.2
+- Terraform v1.0.8
+- Consul v1.11.5
 
 ## Requirements
 
@@ -142,7 +142,7 @@ This module repository includes an example. The setup for the example includes:
 > Note: This example is not a reflection of a production configuration. Its
 > purpose is to help you test this module for your configurations.
 
-Run the following in terminal.
+#### Setup
 
 1. Go into the `examples/setup/` directory.
    ```shell
@@ -170,6 +170,8 @@ Run the following in terminal.
   $ terraform apply
   ```
 
+#### Run CTS
+
 1. Go back up to `examples/`.
    ```shell
    $ cd ..
@@ -182,12 +184,31 @@ Run the following in terminal.
    cts-config-basic.hcl     cts-config-path.hcl      cts-example-basic.tfvars cts-example-path.tfvars
    ```
 
-1. Run Consul-Terraform-Sync and pass the configuration file of your choice. You
+1. Run CTS and pass the configuration file of your choice. You
    can choose between basic and path-based routing. The configuration locally
    references the application gateway module to synchronizes `web` and `api`
    services to an application gateway.
    ```shell
    $ consul-terraform-sync -config-file cts-config-<basic|path>.hcl
+   ```
+
+#### Cleanup
+
+1. Check you are in the `examples/` directory.
+
+1. Go to `sync-tasks/testing`.
+   ```shell
+   cd sync-tasks/testing
+   ```
+
+1. Delete resources created by CTS.
+   ```shell
+   ../../terraform destroy -auto-approve
+   ```
+
+1. Delete resources in the example.
+   ```shell
+   cd ../../setup && terraform destroy -auto-approve
    ```
 
 ### Testing the Module

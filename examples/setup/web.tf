@@ -1,4 +1,7 @@
 resource "azurerm_network_interface" "web" {
+  depends_on = [
+    azurerm_subnet_network_security_group_association.test
+  ]
   name                = "${var.name}-web"
   location            = azurerm_resource_group.test.location
   resource_group_name = azurerm_resource_group.test.name
@@ -58,5 +61,7 @@ resource "azurerm_linux_virtual_machine" "web" {
     CLIENT_PUBLIC_KEY  = tls_locally_signed_cert.client_web_signed_cert.cert_pem
     CLIENT_PRIVATE_KEY = tls_private_key.client_web_key.private_key_pem
     BOOTSTRAP_TOKEN    = random_uuid.consul_bootstrap_token.result
+    CONSUL_VERSION     = var.consul_version
+    ENVOY_VERSION      = var.envoy_version
   }))
 }

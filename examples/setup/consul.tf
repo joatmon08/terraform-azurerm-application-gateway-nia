@@ -1,4 +1,7 @@
 resource "azurerm_network_interface" "consul" {
+  depends_on = [
+    azurerm_subnet_network_security_group_association.test
+  ]
   name                = "${var.name}-consul"
   location            = azurerm_resource_group.test.location
   resource_group_name = azurerm_resource_group.test.name
@@ -62,5 +65,6 @@ resource "azurerm_linux_virtual_machine" "consul" {
     SERVER_PUBLIC_KEY  = tls_locally_signed_cert.server_signed_cert.cert_pem
     SERVER_PRIVATE_KEY = tls_private_key.server_key.private_key_pem
     BOOTSTRAP_TOKEN    = random_uuid.consul_bootstrap_token.result
+    CONSUL_VERSION     = var.consul_version
   }))
 }

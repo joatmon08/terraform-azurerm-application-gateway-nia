@@ -5,17 +5,16 @@ sudo apt-get install curl -y
 
 curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-apt update && apt install -y consul unzip
+apt update && apt install -y consul=${CONSUL_VERSION}-1 unzip
 
 # Install Envoy
 curl https://func-e.io/install.sh | bash -s -- -b /usr/local/bin
-func-e use 1.18.4
-cp /root/.func-e/versions/1.18.4/bin/envoy /usr/local/bin
+func-e use ${ENVOY_VERSION}
+cp /root/.func-e/versions/${ENVOY_VERSION}/bin/envoy /usr/local/bin
 
 # Grab instance IP
 local_ip=`ip -o route get to 169.254.169.254 | sed -n 's/.*src \([0-9.]\+\).*/\1/p'`
-
-mkdir /etc/consul.d/certs
+mkdir -p /etc/consul.d/certs
 
 cat > /etc/consul.d/certs/consul-agent-ca.pem <<- EOF
 ${CA_PUBLIC_KEY}
