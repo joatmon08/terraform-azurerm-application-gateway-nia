@@ -1,4 +1,6 @@
+## If you do not use HCP, create a Consul server on a VM.
 resource "azurerm_network_interface" "consul" {
+  count = var.use_hcp ? 0 : 1
   depends_on = [
     azurerm_subnet_network_security_group_association.test
   ]
@@ -11,11 +13,12 @@ resource "azurerm_network_interface" "consul" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.test.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.consul.id
+    public_ip_address_id          = azurerm_public_ip.consul.0.id
   }
 }
 
 resource "azurerm_public_ip" "consul" {
+  count               = var.use_hcp ? 0 : 1
   name                = "${var.name}-consul"
   resource_group_name = azurerm_resource_group.test.name
   location            = azurerm_resource_group.test.location
@@ -25,12 +28,16 @@ resource "azurerm_public_ip" "consul" {
 }
 
 resource "random_id" "gossip_key" {
+  count       = var.use_hcp ? 0 : 1
   byte_length = 32
 }
 
-resource "random_uuid" "consul_bootstrap_token" {}
+resource "random_uuid" "consul_bootstrap_token" {
+  count = var.use_hcp ? 0 : 1
+}
 
 resource "azurerm_linux_virtual_machine" "consul" {
+  count               = var.use_hcp ? 0 : 1
   name                = "${var.name}-consul"
   resource_group_name = azurerm_resource_group.test.name
   location            = azurerm_resource_group.test.location
@@ -39,7 +46,7 @@ resource "azurerm_linux_virtual_machine" "consul" {
   admin_username      = "adminuser"
 
   network_interface_ids = [
-    azurerm_network_interface.consul.id,
+    azurerm_network_interface.consul.0.id,
   ]
 
   admin_ssh_key {
@@ -60,11 +67,12 @@ resource "azurerm_linux_virtual_machine" "consul" {
   }
 
   custom_data = base64encode(templatefile("scripts/consul.sh", {
-    GOSSIP_KEY         = random_id.gossip_key.b64_std
+    GOSSIP_KEY         = random_id.gossip_key.0.b64_std
     CA_PUBLIC_KEY      = tls_self_signed_cert.ca_cert.cert_pem
     SERVER_PUBLIC_KEY  = tls_locally_signed_cert.server_signed_cert.cert_pem
     SERVER_PRIVATE_KEY = tls_private_key.server_key.private_key_pem
-    BOOTSTRAP_TOKEN    = random_uuid.consul_bootstrap_token.result
+    BOOTSTRAP_TOKEN    = random_uuid.consul_bootstrap_token.0.result
     CONSUL_VERSION     = var.consul_version
   }))
 }
+

@@ -36,7 +36,7 @@ resource "azurerm_network_security_group" "test" {
   }
 
   security_rule {
-    name                       = "Inbound access"
+    name                       = "Inbound access (TCP)"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
@@ -46,6 +46,19 @@ resource "azurerm_network_security_group" "test" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
     description                = "SSH, Consul, application ingress traffic"
+  }
+
+  security_rule {
+    name                       = "Inbound access (UDP)"
+    priority                   = 101
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "udp"
+    source_port_range          = "*"
+    destination_port_ranges    = ["8301"]
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+    description                = "Consul LAN Serf (udp)"
   }
 
 

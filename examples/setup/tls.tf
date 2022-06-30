@@ -4,7 +4,6 @@ resource "tls_private_key" "ca_key" {
 }
 
 resource "tls_self_signed_cert" "ca_cert" {
-  key_algorithm     = tls_private_key.ca_key.algorithm
   private_key_pem   = tls_private_key.ca_key.private_key_pem
   is_ca_certificate = true
 
@@ -30,7 +29,6 @@ resource "tls_private_key" "server_key" {
 
 ## Public Server Cert
 resource "tls_cert_request" "server_cert" {
-  key_algorithm   = tls_private_key.server_key.algorithm
   private_key_pem = tls_private_key.server_key.private_key_pem
 
   subject {
@@ -51,7 +49,6 @@ resource "tls_locally_signed_cert" "server_signed_cert" {
   cert_request_pem = tls_cert_request.server_cert.cert_request_pem
 
   ca_private_key_pem = tls_private_key.ca_key.private_key_pem
-  ca_key_algorithm   = tls_private_key.ca_key.algorithm
   ca_cert_pem        = tls_self_signed_cert.ca_cert.cert_pem
 
   allowed_uses = [
@@ -70,7 +67,6 @@ resource "tls_private_key" "client_web_key" {
 
 ## Public Client Cert
 resource "tls_cert_request" "client_web_cert" {
-  key_algorithm   = tls_private_key.client_web_key.algorithm
   private_key_pem = tls_private_key.client_web_key.private_key_pem
 
   subject {
@@ -91,7 +87,6 @@ resource "tls_locally_signed_cert" "client_web_signed_cert" {
   cert_request_pem = tls_cert_request.client_web_cert.cert_request_pem
 
   ca_private_key_pem = tls_private_key.ca_key.private_key_pem
-  ca_key_algorithm   = tls_private_key.ca_key.algorithm
   ca_cert_pem        = tls_self_signed_cert.ca_cert.cert_pem
 
   allowed_uses = [
@@ -110,7 +105,6 @@ resource "tls_private_key" "client_api_key" {
 
 ## Public Client Cert
 resource "tls_cert_request" "client_api_cert" {
-  key_algorithm   = tls_private_key.client_api_key.algorithm
   private_key_pem = tls_private_key.client_api_key.private_key_pem
 
   subject {
@@ -131,7 +125,6 @@ resource "tls_locally_signed_cert" "client_api_signed_cert" {
   cert_request_pem = tls_cert_request.client_api_cert.cert_request_pem
 
   ca_private_key_pem = tls_private_key.ca_key.private_key_pem
-  ca_key_algorithm   = tls_private_key.ca_key.algorithm
   ca_cert_pem        = tls_self_signed_cert.ca_cert.cert_pem
 
   allowed_uses = [
@@ -150,7 +143,6 @@ resource "tls_private_key" "client_api_v2_key" {
 
 ## Public Client Cert
 resource "tls_cert_request" "client_api_v2_cert" {
-  key_algorithm   = tls_private_key.client_api_v2_key.algorithm
   private_key_pem = tls_private_key.client_api_v2_key.private_key_pem
 
   subject {
@@ -171,7 +163,6 @@ resource "tls_locally_signed_cert" "client_api_v2_signed_cert" {
   cert_request_pem = tls_cert_request.client_api_v2_cert.cert_request_pem
 
   ca_private_key_pem = tls_private_key.ca_key.private_key_pem
-  ca_key_algorithm   = tls_private_key.ca_key.algorithm
   ca_cert_pem        = tls_self_signed_cert.ca_cert.cert_pem
 
   allowed_uses = [

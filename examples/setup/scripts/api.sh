@@ -13,13 +13,50 @@ func-e use ${ENVOY_VERSION}
 cp /root/.func-e/versions/${ENVOY_VERSION}/bin/envoy /usr/local/bin
 
 # Grab instance IP
-local_ip=`ip -o route get to 169.254.169.254 | sed -n 's/.*src \([0-9.]\+\).*/\1/p'`
 mkdir -p /etc/consul.d/certs
 
 cat > /etc/consul.d/certs/consul-agent-ca.pem <<- EOF
 ${CA_PUBLIC_KEY}
 EOF
 
+%{ if USE_HCP }
+cat > /etc/consul.d/consul.hcl <<- EOF
+data_dir = "/opt/consul"
+
+client_addr = "0.0.0.0"
+
+server = false
+
+bind_addr = "0.0.0.0"
+
+advertise_addr = "{{ GetPrivateIP }}"
+
+retry_join = ["${CONSUL_SERVER}"]
+
+encrypt = "${GOSSIP_KEY}"
+
+datacenter = "${CONSUL_DATACENTER}"
+
+verify_outgoing = true
+encrypt_verify_incoming = true
+encrypt_verify_outgoing = true
+
+ca_file = "/etc/consul.d/certs/consul-agent-ca.pem"
+
+acl = {
+  enabled = true
+  default_policy = "deny"
+  down_policy = "async-cache"
+  tokens {
+    default = "${BOOTSTRAP_TOKEN}"
+  }
+}
+
+auto_encrypt = {
+  tls = true
+}
+EOF
+%{ else }
 cat > /etc/consul.d/certs/client-cert.pem <<- EOF
 ${CLIENT_PUBLIC_KEY}
 EOF
@@ -69,6 +106,7 @@ ports {
   grpc = 8502
 }
 EOF
+%{ endif }
 
 touch /etc/consul.d/consul.env
 mkdir /opt/consul

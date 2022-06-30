@@ -6,9 +6,9 @@ application
 gateway](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_gateway).
 It's been tested with:
 
-- Consul-Terraform-Sync (CTS) v0.5.2
+- Consul-Terraform-Sync (CTS) v0.6.0
 - Terraform v1.0.8
-- Consul v1.11.5
+- Consul v1.11.6
 
 ## Requirements
 
@@ -135,7 +135,9 @@ This module repository includes an example. The setup for the example includes:
 
 - Resource group (default name is `testing`)
 - Networks and security groups
-- Consul server on a virtual machine (not a secure configuration)
+- Consul cluster - choose from...
+  - (Default) [HCP Consul on Azure](https://learn.hashicorp.com/tutorials/cloud/consul-client-azure-virtual-machines?in=consul/cloud-production)
+  - Consul server on a virtual machine (not a secure configuration)
 - API virtual machine (with Consul client)
 - Web virtual machine (with Consul client)
 
@@ -156,6 +158,9 @@ This module repository includes an example. The setup for the example includes:
    ```
 
 1. Set the following environment variables so you can run the configuration.
+   Your Azure AD service principal must have sufficient API
+   permissions (`Application.ReadWrite.All`) because it creates a service principal
+   for network peering.
    ```shell
    export ARM_CLIENT_SECRET=""
    export ARM_CLIENT_ID=""

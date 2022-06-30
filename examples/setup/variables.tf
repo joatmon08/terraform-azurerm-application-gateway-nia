@@ -19,11 +19,17 @@ variable "tags" {
 variable "consul_version" {
   type        = string
   description = "Consul version to install for example. Default is 1.11.5."
-  default     = "1.11.5"
+  default     = "1.11.6"
 }
 
 variable "envoy_version" {
   type        = string
   description = "Envoy version to install for example. Default is 1.20.2."
   default     = "1.20.2"
+}
+
+variable "use_hcp" {
+  type        = bool
+  description = "Use HCP on Azure instead of deploying Consul server."
+  default     = false
 }

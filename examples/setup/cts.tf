@@ -68,13 +68,13 @@ buffer_period {
 }
 
 consul {
-  address = "http://${azurerm_linux_virtual_machine.consul.public_ip_address}:8500"
-  token   = "${random_uuid.consul_bootstrap_token.result}"
+  address = "${local.consul_public_address}"
+  token   = "${local.consul_token}"
 }
 
 driver "terraform" {
   log = true
-  version = "1.0.0"
+  version = "1.1.9"
 
   backend "local" {}
 
@@ -108,7 +108,7 @@ task {
  name           = "testing"
  description    = "Example task with two services and basic routing"
  providers      = ["azurerm"]
- source         = "../"
+ module         = "../"
  services       = ["api", "web"]
  variable_files = ["cts-example-basic.tfvars"]
 }
@@ -131,13 +131,13 @@ buffer_period {
 }
 
 consul {
-  address = "http://${azurerm_linux_virtual_machine.consul.public_ip_address}:8500"
-  token   = "${random_uuid.consul_bootstrap_token.result}"
+  address = "${local.consul_public_address}"
+  token   = "${local.consul_token}"
 }
 
 driver "terraform" {
   log = true
-  version = "1.0.0"
+  version = "1.1.9"
 
   backend "local" {}
 
@@ -171,7 +171,7 @@ task {
  name           = "testing"
  description    = "Example task with two services and path-based routing"
  providers      = ["azurerm"]
- source         = "../"
+ module         = "../"
  services       = ["api", "web"]
  variable_files = ["cts-example-path.tfvars"]
 }

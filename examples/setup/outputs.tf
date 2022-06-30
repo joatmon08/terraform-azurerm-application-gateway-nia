@@ -1,4 +1,4 @@
 output "consul_token" {
-  value     = random_uuid.consul_bootstrap_token.result
+  value     = local.consul_token
   sensitive = true
 }
