@@ -108,7 +108,8 @@ task {
  name           = "testing"
  description    = "Example task with two services and basic routing"
  providers      = ["azurerm"]
- module         = "../"
+ module         = "joatmon08/application-gateway-nia/azurerm"
+ version        = "0.0.1"
  services       = ["api", "web"]
  variable_files = ["cts-example-basic.tfvars"]
 }
@@ -171,7 +172,8 @@ task {
  name           = "testing"
  description    = "Example task with two services and path-based routing"
  providers      = ["azurerm"]
- module         = "../"
+ module         = "joatmon08/application-gateway-nia/azurerm"
+ version        = "0.0.1"
  services       = ["api", "web"]
  variable_files = ["cts-example-path.tfvars"]
 }
